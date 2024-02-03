@@ -106,6 +106,7 @@ def fetch_and_generate(ticker, company_name):
     # Normalize Closing Price
     data['Normalized_Close'] = (data['Close'] - data['Close'].min()) / (data['Close'].max() - data['Close'].min())
     
+    """
     sentiment_scores = pd.DataFrame(columns=['Date', 'Sentiment_Score'])
     
     # Iterate through each month
@@ -129,7 +130,49 @@ def fetch_and_generate(ticker, company_name):
     data = data.merge(sentiment_scores, how='left', left_index=True, right_index=True)
 
     return data
-
+    """
+    # Initialize DataFrame for sentiment scores
+    sentiment_scores = pd.DataFrame(columns=['Date', 'Sentiment_Score'])
+    
+    covid_years = [2020, 2021, 2022]
+    all_years = range(2001, 2024)
+    
+    # Calculate sentiment score only for COVID years monthly and yearly
+    for year in all_years:
+        if year in covid_years:
+            for month in range(1, 13):
+                try:
+                    month_start = datetime(year, month, 1)
+                    if month == 12:
+                        month_end = datetime(year + 1, 1, 1) - timedelta(days=1)
+                    else:
+                        month_end = datetime(year, month + 1, 1) - timedelta(days=1)
+    
+                    sentiment_score = fetchdataObj.fetch_newsapi_monthly(company_name + " COVID-19", month_start, month_end)
+                    index = len(sentiment_scores)
+                    sentiment_scores.loc[index] = {'Date': month_end, 'Sentiment_Score': sentiment_score}
+                    #sentiment_scores = sentiment_scores.append({'Date': month_end, 'Sentiment_Score': sentiment_score}, ignore_index=True)
+                except Exception as e:
+                    print(f"Error fetching sentiment score for {ticker} in {month}/{year}: {e}")
+        else:
+            # For non-COVID years, simply append None for each month
+            for month in range(1, 13):
+                month_end = datetime(year, month, 28)  # Simplified; adjust for each month's end date
+                index = len(sentiment_scores)
+                sentiment_scores.loc[index] = {'Date': month_end, 'Sentiment_Score': None}
+                #sentiment_scores = sentiment_scores.append({'Date': month_end, 'Sentiment_Score': None}, ignore_index=True)
+    
+    # Convert 'Date' to datetime and set as index for merging
+    sentiment_scores['Date'] = pd.to_datetime(sentiment_scores['Date'])
+    data = data.merge(sentiment_scores.set_index('Date'), left_index=True, right_index=True, how='left')
+    
+    # Save the DataFrame to an Excel file
+    #excel_filename = f"{ticker}_analysis.xlsx"
+    #data.to_excel(excel_filename)
+    #print(f"Saved data for {ticker} to {excel_filename}")
+    
+    return data
+    
 # List of 50 stock ticker symbols (you can modify this list as needed)
 tickers = ["AAPL", "MSFT", "AMZN", "FB", "GOOGL", "GOOG", "BRK.A", "BRK.B", "JNJ", "V", 
            "WMT", "PG", "JPM", "UNH", "MA", "INTC", "VZ", "HD", "DIS", "ADBE", 
@@ -148,3 +191,10 @@ for ticker in company_dict:
 
 # Example: Access data for Apple Inc.
 print(stock_data["AAPL"].head())
+
+excel_filename = "all_stock_data.xlsx"
+with pd.ExcelWriter(excel_filename, engine='openpyxl') as writer:
+    for ticker, data in stock_data.items():
+        data.to_excel(writer, sheet_name=ticker)
+
+print(f"Saved all stock data to {excel_filename}")
