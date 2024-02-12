@@ -17,7 +17,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import re
-
+import gzip
+import shutil
 import time
 
 def get_empty_dataframe():
@@ -96,6 +97,30 @@ class fetch_dataV2:
         combined_df = pd.concat(df_list, ignore_index=True)
         combined_csv_path = os.path.join('./output_files_v2', 'output_us_yfinance.csv')
         combined_df.to_csv(combined_csv_path, index=False)
+    def compress_final_file(self):
+        # Specify the path of your CSV file and the output GZ file
+        csv_file_path = 'output_files_v2/output_us_yfinance.csv'
+        compressed_file_path = 'output_files_v2/output_us_yfinance.csv.gz'
+        
+        # Open the CSV file and the target GZ file
+        with open(csv_file_path, 'rb') as input_file:
+            with gzip.open(compressed_file_path, 'wb') as output_file:
+                # Copy the contents of the CSV to the compressed file
+                shutil.copyfileobj(input_file, output_file)
+        
+        print(f"Compressed file saved as: {compressed_file_path}")
+    def decompress_final_file(self):
+        # Specify the path of your compressed GZ file and the output CSV file
+        compressed_file_path = 'output_files_v2/output_us_yfinance.csv.gz'
+        decompressed_file_path = 'output_files_v2/output_us_yfinance.csv'
+        
+        # Open the compressed GZ file and the target CSV file
+        with gzip.open(compressed_file_path, 'rb') as input_file:
+            with open(decompressed_file_path, 'wb') as output_file:
+                # Copy the contents of the compressed file to the decompressed file
+                shutil.copyfileobj(input_file, output_file)
+        
+        print(f"Decompressed file saved as: {decompressed_file_path}")
 
 class ESGDataFetcher:
     def __init__(self):
@@ -163,5 +188,6 @@ class ESGDataFetcher:
 
 if __name__ == "__main__":
    fetchDataObj = fetch_dataV2('./data/indname.xls','US by industry')
-   fetchDataObj.fetch_yahoo_finance_data()
-   fetchDataObj.combine_op_batch_files()
+   #fetchDataObj.fetch_yahoo_finance_data()
+   #fetchDataObj.combine_op_batch_files()
+   fetchDataObj.decompress_final_file()
