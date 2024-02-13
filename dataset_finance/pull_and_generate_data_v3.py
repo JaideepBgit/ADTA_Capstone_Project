@@ -44,7 +44,10 @@ class fetch_dataV2:
         
     def fetch_OneCompany_data(self, ticker):
         # Fetch yearly data and retain date information
-        return yf.download(ticker, start="2001-01-01", end="2023-01-01", interval="1mo")
+        # return yf.download(ticker, start="2001-01-01", end="2023-01-01", interval="1mo")
+        data = yf.download(ticker, start="2001-01-01", end="2023-01-01", interval="1mo")
+        data.reset_index(inplace=True)  # Reset the index to turn the date index into a column
+        return data
 
     def fetch_yahoo_finance_data(self):
         esgDataFetcherObj = ESGDataFetcher()  # Initialize ESGDataFetcher
