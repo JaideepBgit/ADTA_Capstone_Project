@@ -1,4 +1,4 @@
-# ADTA 5940 Capstone Project
+# Masters Capstone Project - Advanced Data Analytics
 
 ## Folders
 1. datasets_finance - contains data from yahoo finance
