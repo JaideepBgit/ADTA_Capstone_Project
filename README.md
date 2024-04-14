@@ -3,6 +3,7 @@
 ## Folders
 1. datasets_finance - contains data from yahoo finance
 2. datasets - contains data about factors from the us bureau of labor statistics.
+	2.1. - datasets/datasets_generated_initially_toworkwith has the data which the researchers can work with initially
 
 ## Variables in different databases
 ### Datasets_finance
