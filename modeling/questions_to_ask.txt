@@ -1,0 +1,34 @@
+How do I need to combine data :
+
+yahoo_finance data: Date 	Open 	High 	Low 	Close 	Adj Close 	Volume 	Environment Score 	Social Score 	Governance Score 	Company Name 	Industry Group 	Primary Sector 	Country 	Ticker
+
+US Labor Stats Data: Date 	Average Hourly Earnings 	Estimate Value 	Standard Error 	payroll_employment 	PPIACO 	Productivity 	unemployment_rate
+
+in yahoo_finance data: 
+
+1. combination of data is complete
+
+====================================================================================================
+
+
+This how the data is:
+Date	Adj Close	Volume	Environment Score	Social Score	Governance Score	Company Name	Industry Group	Primary Sector	average_hourly_earnings	Interpolated Employment Cost Index	payroll_employment	PPIACO	Interpolated Labor Productivity	unemployment_rate	Interpolated HDI
+01/01/2001	26.92238998	38601400	0.1	9.3	6.9	Omnicom Group Inc. (NYSE:OMC)	Advertising	Communication Services		87.6	132699	140	72.983	4.2	0.892
+01/02/2001	26.74251175	48594600	0.1	9.3	6.9	Omnicom Group Inc. (NYSE:OMC)	Advertising	Communication Services		87.88024666	132786	137.4	73.29925918	4.2	0.892045742
+01/03/2001	24.43951416	54958800	0.1	9.3	6.9	Omnicom Group Inc. (NYSE:OMC)	Advertising	Communication Services		88.12844412	132751	135.9	73.76381324	4.3	0.892099242
+01/04/2001	25.95491982	44356200	0.1	9.3	6.9	Omnicom Group Inc. (NYSE:OMC)	Advertising	Communication Services		88.4	132455	136.4	74.238	4.4	0.892160223
+01/05/2001	27.50009537	40936600	0.1	9.3	6.9	Omnicom Group Inc. (NYSE:OMC)	Advertising	Communication Services		88.661759	132411	136.8	74.48117808	4.3	0.892228408
+-------------------------
+
+the data is structured like this
+
+company 1 - Stock data from 2001 to 2022. *ESG (Environment, Social, Governance) scores, * Name, * Industry Group, * Primary Sector, % (average_hourly_earnings, Interpolated Employment Cost Index, payroll_employment, PPIACO, Interpolated Labor Productivity, unemployment_rate, Interpolated HDI)
+-----------
+company 2 - Stock data from 2001 to 2022. *ESG (Environment, Social, Governance) scores, * Name, * Industry Group, * Primary Sector, % (average_hourly_earnings, Interpolated Employment Cost Index, payroll_employment, PPIACO, Interpolated Labor Productivity, unemployment_rate, Interpolated HDI)
+----------------
+company 3 - ......
+and so on for 99 companies same format
+
+
+* means (it is only one value for a company but it is replicated for all the rows)
+% These variables data are the us labor statistics with values for every month (from 2001 to 2022). And they are put same for each company. 
